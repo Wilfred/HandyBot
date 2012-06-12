@@ -4,7 +4,7 @@ A simple IRC bot in Clojure.
 
 ## Usage
 
-FIXME: write
+    $ lein run
 
 ## License
 
