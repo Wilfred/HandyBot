@@ -1,6 +1,6 @@
 # Handy
 
-FIXME: write description
+A simple IRC bot in Clojure.
 
 ## Usage
 
@@ -8,6 +8,6 @@ FIXME: write
 
 ## License
 
-Copyright (C) 2012 FIXME
+Copyright (C) 2012 Wilfred Hughes
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the GNU Public License v2 or later.
