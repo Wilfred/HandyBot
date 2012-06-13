@@ -3,10 +3,11 @@
 (def IRC-SERVER "irc.freenode.net")
 (def PORT 6667)
 
-(def NICK "Handy")
-(def USER-NAME "Handy")
-(def HOST-NAME "Handy")
-(def SERVER-NAME "Handy")
+;; todo: automatically generate names when there's a name clash
+(def NICK "HandyBot")
+(def USER-NAME "HandyBot")
+(def HOST-NAME "HandyBot")
+(def SERVER-NAME "HandyBot")
 (def REAL-NAME "Handy IRC Bot")
 
 (def CHANNEL "#HandyBot")
