@@ -20,22 +20,21 @@
     {:in in :out out}))
 
 ;; todo: format message automatically rather than requiring use of 'format
-(defn send-to-server [socket message]
-  (let [out (:out socket)]
-    (.print out (format "%s\r\n" message))
+(defn send-to-server [server-connection raw-message]
+  (let [out (:out server-connection)]
+    (.print out (format "%s\r\n" raw-message))
     (.flush out)))
 
-(defn server-connection [host port]
-  (let [server-socket (open-socket host port)]
-    (send-to-server server-socket (format "NICK %s" NICK))
-    (send-to-server server-socket
+(defn connect-to-server [host port]
+  (let [server-connection (open-socket host port)]
+    (send-to-server server-connection (format "NICK %s" NICK))
+    (send-to-server server-connection
                     (format "USER %s %s %s :%s"
                             USER-NAME HOST-NAME SERVER-NAME REAL-NAME))
-    server-socket))
+    server-connection))
 
 (defn -main []
-  (let [server-conn (server-connection IRC-SERVER PORT)]
-    (send-to-server server-conn (format "JOIN %s" CHANNEL))
-    (send-to-server server-conn (format "PRIVMSG %s :%s" CHANNEL "hello there!"))
-    (.close (:in server-conn))))
-
+  (let [server-connection (connect-to-server IRC-SERVER PORT)]
+    (send-to-server server-connection (format "JOIN %s" CHANNEL))
+    (send-to-server server-connection (format "PRIVMSG %s :%s" CHANNEL "hello there!"))
+    (.close (:in server-connection))))
