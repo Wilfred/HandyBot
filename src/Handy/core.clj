@@ -33,8 +33,14 @@
                             USER-NAME HOST-NAME SERVER-NAME REAL-NAME))
     server-connection))
 
+(defn join-channel [server-connection channel]
+  (send-to-server server-connection (format "JOIN %s" channel)))
+
+(defn say-in-channel [server-connection channel message]
+  (send-to-server server-connection (format "PRIVMSG %s :%s" channel message)))
+
 (defn -main []
   (let [server-connection (connect-to-server IRC-SERVER PORT)]
-    (send-to-server server-connection (format "JOIN %s" CHANNEL))
-    (send-to-server server-connection (format "PRIVMSG %s :%s" CHANNEL "hello there!"))
+    (join-channel server-connection CHANNEL)
+    (say-in-channel server-connection CHANNEL "hello there!")
     (.close (:in server-connection))))
