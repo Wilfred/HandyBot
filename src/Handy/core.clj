@@ -42,6 +42,23 @@
 (defn say-in-channel [server-connection channel message]
   (send-to-server server-connection (format "PRIVMSG %s :%s" channel message)))
 
+;; todo: nicely separate out raw functions from chat functions
+(defn answer-ping [message]
+  "Respond to a ping from the IRC server so we don't get disconnected."
+  (format "PONG%s" (.substring message 4)))
+
+;; todo: rename in and out to from-server and to-server
+;; todo: proper logging
+(defn idle-in-channel [server-connection channel]
+  (join-channel server-connection channel)
+  (while true
+    (let [message (.readLine (:in server-connection))]
+      (if (not (nil? message))
+        (do
+         (if (.startsWith message "PING")
+           (send-to-server server-connection (answer-ping message)))
+         (println message))))))
+
 (defn -main []
   (let [server-connection (connect-to-server IRC-SERVER PORT)]
     (join-channel server-connection CHANNEL)
