@@ -33,6 +33,9 @@
                             USER-NAME HOST-NAME SERVER-NAME REAL-NAME))
     server-connection))
 
+(defn disconnect-from-server [server-connection]
+  (.close (:in server-connection)))
+
 (defn join-channel [server-connection channel]
   (send-to-server server-connection (format "JOIN %s" channel)))
 
