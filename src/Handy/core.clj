@@ -47,17 +47,26 @@
   "Respond to a ping from the IRC server so we don't get disconnected."
   (format "PONG%s" (.substring message 4)))
 
+(defn channel-message? [raw-message]
+  "Return true if RAW-MESSAGE is a message from a channel."
+  (boolean (re-find #".*?!.*? PRIVMSG" raw-message)))
+
 ;; todo: rename in and out to from-server and to-server
 ;; todo: proper logging
 (defn idle-in-channel [server-connection channel]
   (join-channel server-connection channel)
   (while true
     (let [message (.readLine (:in server-connection))]
-      (if (not (nil? message))
-        (do
-         (if (.startsWith message "PING")
-           (send-to-server server-connection (answer-ping message)))
-         (println message))))))
+      (do
+        (if (not (nil? message))
+          (println message))
+        (cond
+         (.startsWith message "PING")
+         (send-to-server server-connection (answer-ping message))
+         ;; todo: handle direct messages too
+         (channel-message? message)
+         (say-in-channel server-connection channel message)
+         )))))
 
 (defn -main []
   (let [server-connection (connect-to-server IRC-SERVER PORT)]
