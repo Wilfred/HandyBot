@@ -70,6 +70,7 @@
 
 (defn -main []
   (let [server-connection (connect-to-server IRC-SERVER PORT)]
-    (join-channel server-connection CHANNEL)
-    (say-in-channel server-connection CHANNEL "hello there!")
+    (idle-in-channel server-connection CHANNEL)
+    (while true
+      (println (.readLine (:in server-connection))))
     (.close (:in server-connection))))
