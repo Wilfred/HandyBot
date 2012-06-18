@@ -2,6 +2,9 @@
 
 A simple IRC bot in Clojure.
 
+Target features: remembers aliases, gets weather, tube status, execute
+code in sandbox.
+
 ## Usage
 
     $ lein run
