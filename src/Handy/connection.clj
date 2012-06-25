@@ -59,6 +59,7 @@ message, the user, etc."
 ;; todo: rename in and out to from-server and to-server
 ;; todo: proper logging
 (defn idle-in-channel [server-connection channel]
+  "Join CHANNEL, and respond to the users there."
   (join-channel server-connection channel)
   (while true
     (let [message (.readLine (:in server-connection))]
@@ -66,6 +67,7 @@ message, the user, etc."
         (if (not (nil? message))
           (println message))
         (cond
+         ;; FIXME: PINGs aren't channel specific
          (.startsWith message "PING")
          (send-to-server server-connection (answer-ping message))
          ;; todo: handle direct messages too
