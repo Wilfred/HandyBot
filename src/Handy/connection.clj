@@ -1,4 +1,6 @@
-(ns Handy.connection)
+(ns Handy.connection
+  "Functions for connecting to an IRC server."
+  (:use [Handy.interaction :only [say-hello]]))
 
 ;; todo: automatically generate names when there's a name clash
 (def NICK "HandyBot")
@@ -46,6 +48,14 @@
   "Return true if RAW-MESSAGE is a message from a channel."
   (boolean (re-find #".*?!.*? PRIVMSG" raw-message)))
 
+(defn parse-channel-message [raw-message]
+  "Separate RAW-MESSAGE into a map of the different parts: the
+message, the user, etc."
+  (let [[whole-message nick user host message-type channel message]
+        (re-find #":(.*?)!(.*?)@(.*?) (.*?) (.*?) :(.*)" raw-message)]
+    {:nick nick :user user :host host :message-type message-type
+     :channel channel :message message}))
+
 ;; todo: rename in and out to from-server and to-server
 ;; todo: proper logging
 (defn idle-in-channel [server-connection channel]
@@ -60,5 +70,5 @@
          (send-to-server server-connection (answer-ping message))
          ;; todo: handle direct messages too
          (channel-message? message)
-         (say-in-channel server-connection channel message)
+         (say-in-channel server-connection channel (say-hello (parse-channel-message message)))
          )))))
