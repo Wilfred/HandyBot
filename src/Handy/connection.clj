@@ -70,5 +70,7 @@ message, the user, etc."
          (send-to-server server-connection (answer-ping message))
          ;; todo: handle direct messages too
          (channel-message? message)
-         (say-in-channel server-connection channel (say-hello (parse-channel-message message)))
+         (let [parsed-message (parse-channel-message message)]
+           (if (.startsWith (parsed-message :message) "%")
+             (say-in-channel server-connection channel (say-hello (parse-channel-message message)))))
          )))))
