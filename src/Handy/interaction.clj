@@ -1,14 +1,11 @@
 (ns Handy.interaction
   "Functions that make the bot speak in a channel.")
 
-;; todo: fix the duplication with connection.clj of send-to-server and join-channel
+;; todo: fix the duplication with connection.clj of send-to-server
 (defn send-to-server [server-connection raw-message]
   (let [to-server (:to-server server-connection)]
     (.print to-server (format "%s\r\n" raw-message))
     (.flush to-server)))
-
-(defn join-channel [server-connection channel]
-  (send-to-server server-connection (format "JOIN %s" channel)))
 
 (defn say-in-channel [server-connection channel message]
   (send-to-server server-connection (format "PRIVMSG %s :%s" channel message)))
