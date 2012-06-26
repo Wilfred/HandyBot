@@ -1,5 +1,8 @@
 (ns Handy.interaction
-  "Functions that make the bot speak in a channel.")
+  "Functions that make the bot speak in a channel."
+  (:use [clojure.string :only [trim]]))
+
+;; todo: factor out the bot command prefix
 
 ;; todo: fix the duplication with connection.clj of send-to-server
 (defn send-to-server [server-connection raw-message]
@@ -18,11 +21,20 @@ message, the user, etc."
     {:nick nick :user user :host host :message-type message-type
      :channel channel :message message}))
 
+(defn parse-command [message]
+  "Separate MESSAGE into the command name and its argument."
+  (let [[_ command-name argument]
+        (re-find #"%([^ ]+)(.*)" message)]
+    {:command-name command-name :argument (trim argument)}))
+
 (defn say-hello [{nick :nick}]
   "Greet the user who spoke."
   (format "Hello %s!" nick))
 
 (defn dispatch-command [server-connection raw-message]
-  (let [parsed-message (parse-channel-message raw-message)]
-    (if (.startsWith (parsed-message :message) "%")
-      (say-in-channel server-connection (parsed-message :channel) (say-hello parsed-message)))))
+  (let [parsed-message (parse-channel-message raw-message)
+        parsed-command (parse-command (parsed-message :message))]
+    (when parsed-command
+      (if (= (parsed-command :command-name) "hello")
+        (say-in-channel server-connection (parsed-message :channel) (say-hello parsed-message))
+        (say-in-channel server-connection (parsed-message :channel "Sorry, I don't know how to do that."))))))
