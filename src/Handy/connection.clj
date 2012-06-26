@@ -1,6 +1,6 @@
 (ns Handy.connection
   "Functions for connecting to an IRC server."
-  (:use [Handy.interaction :only [say-hello]]))
+  (:use [Handy.interaction :only [dispatch-command]]))
 
 ;; todo: automatically generate names when there's a name clash
 (def NICK "HandyBot")
@@ -36,9 +36,6 @@
 (defn join-channel [server-connection channel]
   (send-to-server server-connection (format "JOIN %s" channel)))
 
-(defn say-in-channel [server-connection channel message]
-  (send-to-server server-connection (format "PRIVMSG %s :%s" channel message)))
-
 ;; todo: nicely separate out raw functions from chat functions
 (defn answer-ping [message]
   "Respond to a ping from the IRC server so we don't get disconnected."
@@ -48,17 +45,10 @@
   "Return true if RAW-MESSAGE is a message from a channel."
   (boolean (re-find #".*?!.*? PRIVMSG" raw-message)))
 
-(defn parse-channel-message [raw-message]
-  "Separate RAW-MESSAGE into a map of the different parts: the
-message, the user, etc."
-  (let [[whole-message nick user host message-type channel message]
-        (re-find #":(.*?)!(.*?)@(.*?) (.*?) (.*?) :(.*)" raw-message)]
-    {:nick nick :user user :host host :message-type message-type
-     :channel channel :message message}))
-
 ;; todo: proper logging
-(defn idle-in-channel [server-connection channel]
+(defn server-event-loop [server-connection channel]
   "Join CHANNEL, and respond to the users there."
+  ;; todo: this shouldn't be part of the event loop
   (join-channel server-connection channel)
   (while true
     (let [message (.readLine (:from-server server-connection))]
@@ -71,7 +61,5 @@ message, the user, etc."
          (send-to-server server-connection (answer-ping message))
          ;; todo: handle direct messages too
          (channel-message? message)
-         (let [parsed-message (parse-channel-message message)]
-           (if (.startsWith (parsed-message :message) "%")
-             (say-in-channel server-connection channel (say-hello (parse-channel-message message)))))
+         (dispatch-command server-connection message)
          )))))
