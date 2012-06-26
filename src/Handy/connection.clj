@@ -11,16 +11,16 @@
 
 (defn open-socket [host port]
   (let [socket (java.net.Socket. host port)
-        in (java.io.BufferedReader. 
+        from-server (java.io.BufferedReader.
             (java.io.InputStreamReader. (.getInputStream socket)))
-        out (java.io.PrintWriter. (.getOutputStream socket))]
-    {:in in :out out}))
+        to-server (java.io.PrintWriter. (.getOutputStream socket))]
+    {:from-server from-server :to-server to-server}))
 
 ;; todo: format message automatically rather than requiring use of 'format
 (defn send-to-server [server-connection raw-message]
-  (let [out (:out server-connection)]
-    (.print out (format "%s\r\n" raw-message))
-    (.flush out)))
+  (let [to-server (:to-server server-connection)]
+    (.print to-server (format "%s\r\n" raw-message))
+    (.flush to-server)))
 
 (defn connect-to-server [host port]
   (let [server-connection (open-socket host port)]
@@ -31,7 +31,7 @@
     server-connection))
 
 (defn disconnect-from-server [server-connection]
-  (.close (:in server-connection)))
+  (.close (:from-server server-connection)))
 
 (defn join-channel [server-connection channel]
   (send-to-server server-connection (format "JOIN %s" channel)))
@@ -56,13 +56,12 @@ message, the user, etc."
     {:nick nick :user user :host host :message-type message-type
      :channel channel :message message}))
 
-;; todo: rename in and out to from-server and to-server
 ;; todo: proper logging
 (defn idle-in-channel [server-connection channel]
   "Join CHANNEL, and respond to the users there."
   (join-channel server-connection channel)
   (while true
-    (let [message (.readLine (:in server-connection))]
+    (let [message (.readLine (:from-server server-connection))]
       (do
         (if (not (nil? message))
           (println message))
