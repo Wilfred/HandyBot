@@ -23,9 +23,9 @@ message, the user, etc."
 
 (defn parse-command [message]
   "Separate MESSAGE into the command name and its argument."
-  (let [[_ command-name argument]
-        (re-find #"%([^ ]+)(.*)" message)]
-    {:command-name command-name :argument (trim argument)}))
+  (when-let [match (re-find #"%([^ ]+)(.*)" message)]
+    (let [[_ command-name argument] match]
+      {:command-name command-name :argument (trim argument)})))
 
 (defn say-hello [{nick :nick}]
   "Greet the user who spoke."
@@ -37,4 +37,4 @@ message, the user, etc."
     (when parsed-command
       (if (= (parsed-command :command-name) "hello")
         (say-in-channel server-connection (parsed-message :channel) (say-hello parsed-message))
-        (say-in-channel server-connection (parsed-message :channel "Sorry, I don't know how to do that."))))))
+        (say-in-channel server-connection (parsed-message :channel) "Sorry, I don't know how to do that.")))))
