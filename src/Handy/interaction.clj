@@ -4,7 +4,7 @@
 
 ;; todo: factor out the bot command prefix
 
-;; todo: fix the duplication with connection.clj of send-to-server
+;; todo: fix the duplication with connection.clj of send-to-server and join-channel
 (defn send-to-server [server-connection raw-message]
   (let [to-server (:to-server server-connection)]
     (.print to-server (format "%s\r\n" raw-message))
@@ -31,10 +31,20 @@ message, the user, etc."
   "Greet the user who spoke."
   (format "Hello %s!" nick))
 
+(defn join-channel [{channel :argument}]
+  (format "JOIN %s" channel))
+
 (defn dispatch-command [server-connection raw-message]
   (let [parsed-message (parse-channel-message raw-message)
-        parsed-command (parse-command (parsed-message :message))]
+        parsed-command (parse-command (parsed-message :message))
+        parsed-info (conj parsed-message parsed-command)] ; refactor, this is a rubbish name
     (when parsed-command
-      (if (= (parsed-command :command-name) "hello")
-        (say-in-channel server-connection (parsed-message :channel) (say-hello parsed-message))
-        (say-in-channel server-connection (parsed-message :channel) "Sorry, I don't know how to do that.")))))
+      (cond
+       (= (parsed-command :command-name) "hello")
+       (say-in-channel server-connection (parsed-message :channel) (say-hello parsed-info))
+
+       (= (parsed-command :command-name) "join")
+       (send-to-server server-connection (join-channel parsed-info))
+
+       true
+       (say-in-channel server-connection (parsed-info :channel) "Sorry, I don't know how to do that.")))))
