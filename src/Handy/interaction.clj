@@ -13,7 +13,7 @@
 (defn say-in-channel [server-connection channel message]
   (send-to-server server-connection (format "PRIVMSG %s :%s" channel message)))
 
-(defn parse-channel-message [raw-message]
+(defn parse-irc-message [raw-message]
   "Separate RAW-MESSAGE into a map of the different parts: the
 message, the user, etc."
   (let [[whole-message nick user host message-type channel message]
@@ -21,11 +21,15 @@ message, the user, etc."
     {:nick nick :user user :host host :message-type message-type
      :channel channel :message message}))
 
-(defn parse-command [message]
-  "Separate MESSAGE into the command name and its argument."
-  (when-let [match (re-find #"%([^ ]+)(.*)" message)]
-    (let [[_ command-name argument] match]
-      {:command-name command-name :argument (trim argument)})))
+(defn parse-bot-message [raw-message]
+  "Separate RAW-MESSAGE into the command name, its argument, and IRC
+information. Returns nil if this raw messsage doesn't look like a bot
+command."
+  (let [parsed-irc-message (parse-irc-message raw-message)]
+    (when-let [match (re-find #"%([^ ]+)(.*)" (parsed-irc-message :message))]
+      (let [[_ command-name argument] match]
+        (conj parsed-irc-message
+              {:command-name command-name :argument (trim argument)})))))
 
 (defn say-hello [{nick :nick}]
   "Greet the user who spoke."
@@ -35,16 +39,13 @@ message, the user, etc."
   (format "JOIN %s" channel))
 
 (defn dispatch-command [server-connection raw-message]
-  (let [parsed-message (parse-channel-message raw-message)
-        parsed-command (parse-command (parsed-message :message))
-        parsed-info (conj parsed-message parsed-command)] ; refactor, this is a rubbish name
-    (when parsed-command
-      (cond
-       (= (parsed-command :command-name) "hello")
-       (say-in-channel server-connection (parsed-message :channel) (say-hello parsed-info))
+  (when-let [parsed-bot-message (parse-bot-message raw-message)]
+    (cond
+     (= (parsed-bot-message :command-name) "hello")
+     (say-in-channel server-connection (parsed-bot-message :channel) (say-hello parsed-bot-message))
 
-       (= (parsed-command :command-name) "join")
-       (send-to-server server-connection (join-channel parsed-info))
+     (= (parsed-bot-message :command-name) "join")
+     (send-to-server server-connection (join-channel parsed-bot-message))
 
-       true
-       (say-in-channel server-connection (parsed-info :channel) "Sorry, I don't know how to do that.")))))
+     true
+     (say-in-channel server-connection (parsed-bot-message :channel) "Sorry, I don't know how to do that."))))
