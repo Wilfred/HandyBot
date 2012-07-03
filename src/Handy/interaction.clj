@@ -31,6 +31,20 @@ command."
         (conj parsed-irc-message
               {:command-name command-name :argument (trim argument)})))))
 
+(defn call-raw-command [server-connection command parsed-message]
+  "Execute a bot command COMMAND that was called by
+PARSED-MESSAGE. The command may send any IRC command to the server."
+  (send-to-server server-connection (command parsed-message)))
+
+(defn call-say-command [server-connection command parsed-message]
+  "Execute a bot command COMMAND that was called by
+PARSED-MESSAGE. The command may only say something in the channel."
+  (say-in-channel server-connection (parsed-message :channel) (command parsed-message)))
+
+(defn unknown-command [{}]
+  "Reponse given when we don't have any command matching the user's request."
+  "Sorry, I don't know how to do that.")
+
 (defn say-hello [{nick :nick}]
   "Greet the user who spoke."
   (format "Hello %s!" nick))
@@ -39,13 +53,13 @@ command."
   (format "JOIN %s" channel))
 
 (defn dispatch-command [server-connection raw-message]
-  (when-let [parsed-bot-message (parse-bot-message raw-message)]
+  (when-let [parsed-message (parse-bot-message raw-message)]
     (cond
-     (= (parsed-bot-message :command-name) "hello")
-     (say-in-channel server-connection (parsed-bot-message :channel) (say-hello parsed-bot-message))
+     (= (parsed-message :command-name) "hello")
+     (call-say-command server-connection say-hello parsed-message)
 
-     (= (parsed-bot-message :command-name) "join")
-     (send-to-server server-connection (join-channel parsed-bot-message))
+     (= (parsed-message :command-name) "join")
+     (call-raw-command server-connection join-channel parsed-message)
 
      true
-     (say-in-channel server-connection (parsed-bot-message :channel) "Sorry, I don't know how to do that."))))
+     (call-say-command server-connection unknown-command parsed-message))))
