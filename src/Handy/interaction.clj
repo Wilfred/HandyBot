@@ -41,29 +41,37 @@ PARSED-MESSAGE. The command may send any IRC command to the server."
 PARSED-MESSAGE. The command may only say something in the channel."
   (say-in-channel server-connection (parsed-message :channel) (command parsed-message)))
 
-(defn unknown-command [{}]
-  "Reponse given when we don't have any command matching the user's request."
-  "Sorry, I don't know how to do that.")
+(def command-routing
+  "A map of command names (as used by users) to their respective functions."
+  (ref {}))
 
-(defn say-hello [{nick :nick}]
+(defmacro defcommand
+  "A command available in the IRC bot with the %foo syntax."
+  [name params doc-string body]
+  `(do
+     (defn ~name ~params ~doc-string ~body)
+     (dosync (alter command-routing conj
+                    {(str '~name) ~name}))))
+
+(defcommand hello [{nick :nick}]
   "Greet the user who spoke."
   (format "Hello %s!" nick))
 
 (defn join-channel [{channel :argument}]
   (format "JOIN %s" channel))
 
-(defn magic-8-ball [{}]
+(defcommand magic8 [{}]
+  "Randomly choose a yes-no-maybe response."
   (rand-nth ["Yes." "No." "Definitely." "Of course not!" "Highly likely."
               "Ask yourself, do you really want to know?"
               "I'm telling you, you don't want to know." "Mu!"]))
 
-(def command-routing
-  "A map of command names (as used by users) to their respective functions."
-  {"hello" say-hello
-   "magic8" magic-8-ball})
+(defn unknown-command [{}]
+  "Reponse given when we don't have any command matching the user's request."
+  (str "Sorry, I don't know how to do that. I know: " (keys @command-routing)))
 
 (defn dispatch-command [server-connection raw-message]
   (when-let [parsed-message (parse-bot-message raw-message)]
     (let [command-name (parsed-message :command-name)
-          command (or (command-routing command-name) unknown-command)]
+          command (or (@command-routing command-name) unknown-command)]
      (call-say-command server-connection command parsed-message))))
