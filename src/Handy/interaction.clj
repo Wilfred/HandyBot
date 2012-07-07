@@ -57,17 +57,13 @@ PARSED-MESSAGE. The command may only say something in the channel."
               "Ask yourself, do you really want to know?"
               "I'm telling you, you don't want to know." "Mu!"]))
 
+(def command-routing
+  "A map of command names (as used by users) to their respective functions."
+  {"hello" say-hello
+   "magic8" magic-8-ball})
+
 (defn dispatch-command [server-connection raw-message]
   (when-let [parsed-message (parse-bot-message raw-message)]
-    (cond
-     (= (parsed-message :command-name) "hello")
-     (call-say-command server-connection say-hello parsed-message)
-
-     (= (parsed-message :command-name) "join")
-     (call-raw-command server-connection join-channel parsed-message)
-
-     (= (parsed-message :command-name) "magic8")
-     (call-say-command server-connection magic-8-ball parsed-message)
-
-     true
-     (call-say-command server-connection unknown-command parsed-message))))
+    (let [command-name (parsed-message :command-name)
+          command (or (command-routing command-name) unknown-command)]
+     (call-say-command server-connection command parsed-message))))
