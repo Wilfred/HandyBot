@@ -1,4 +1,4 @@
-(ns Handy.interaction
+(ns Handy.routing
   "Functions that make the bot speak in a channel."
   (:use [clojure.string :only [trim]]))
 

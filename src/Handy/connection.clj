@@ -1,6 +1,6 @@
 (ns Handy.connection
   "Functions for connecting to an IRC server."
-  (:use [Handy.interaction :only [dispatch-command]]))
+  (:use [Handy.routing :only [dispatch-command]]))
 
 ;; todo: automatically generate names when there's a name clash
 (def NICK "HandyBot")
