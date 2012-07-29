@@ -1,13 +1,7 @@
 (ns Handy.connection
   "Functions for connecting to an IRC server."
-  (:use [Handy.routing :only [dispatch-command]]))
-
-;; todo: automatically generate names when there's a name clash
-(def NICK "HandyBot")
-(def USER-NAME "HandyBot")
-(def HOST-NAME "HandyBot")
-(def SERVER-NAME "HandyBot")
-(def REAL-NAME "Handy IRC Bot")
+  (:use [Handy.routing :only [dispatch-command]]
+        [Handy.settings :only [settings]]))
 
 (defn open-socket [host port]
   (let [socket (java.net.Socket. host port)
@@ -24,10 +18,13 @@
 
 (defn connect-to-server [host port]
   (let [server-connection (open-socket host port)]
-    (send-to-server server-connection (format "NICK %s" NICK))
+    (send-to-server server-connection (format "NICK %s" (:nick settings)))
     (send-to-server server-connection
                     (format "USER %s %s %s :%s"
-                            USER-NAME HOST-NAME SERVER-NAME REAL-NAME))
+                            (:user-name settings)
+                            (:host-name settings)
+                            (:server-name settings)
+                            (:real-name settings)))
     server-connection))
 
 (defn disconnect-from-server [server-connection]
