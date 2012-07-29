@@ -3,6 +3,7 @@
   (:use [Handy.parsing :only [parse-bot-message]]
         [Handy.commands.help :only [help]]
         [Handy.commands.source :only [source]]
+        [Handy.commands.magic8 :only [magic8]]
         [Handy.routes :only [routes]]
         [clojure.string :only [split-lines]]))
 
@@ -39,15 +40,10 @@ PARSED-MESSAGE. The command may only say something in the channel."
   "Greet the user who spoke."
   (format "Hello %s!" nick))
 
-(defcommand magic8 [{}]
-  "Randomly choose a yes-no-maybe response."
-  (rand-nth ["Yes." "No." "Definitely." "Of course not!" "Highly likely."
-              "Ask yourself, do you really want to know?"
-              "I'm telling you, you don't want to know." "Mu!"]))
-
 (dosync (alter routes conj
                {"help" help
-                "source" source}))
+                "source" source
+                "magic8" magic8}))
 
 (defn unknown-command [{}]
   "Reponse given when we don't have any command matching the user's request."
