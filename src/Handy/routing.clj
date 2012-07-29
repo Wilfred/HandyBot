@@ -1,7 +1,7 @@
 (ns Handy.routing
   "Functions that make the bot speak in a channel."
   (:use [clojure.string :only [trim]]
-         [Handy.cmds.help :only [help]]))
+         [Handy.commands.help :only [help]]))
 
 ;; todo: factor out the bot command prefix
 

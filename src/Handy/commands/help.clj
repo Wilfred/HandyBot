@@ -1,4 +1,4 @@
-(ns Handy.cmds.help)
+(ns Handy.commands.help)
 
 ;; todo: get version from settings
 (defn help [{nick :nick}]
