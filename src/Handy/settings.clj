@@ -19,4 +19,5 @@
    :server-name "HandyBot"
    :real-name "Handy IRC Bot"
    :server "irc.freenode.net"
-   :port 6667})
+   :port 6667
+   :channel "#HandyBot"})
