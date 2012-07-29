@@ -1,6 +1,7 @@
 (ns Handy.routing
   "Functions that make the bot speak in a channel."
-  (:use [clojure.string :only [trim]]))
+  (:use [clojure.string :only [trim]]
+         [Handy.cmds.help :only [help]]))
 
 ;; todo: factor out the bot command prefix
 
@@ -65,6 +66,9 @@ PARSED-MESSAGE. The command may only say something in the channel."
   (rand-nth ["Yes." "No." "Definitely." "Of course not!" "Highly likely."
               "Ask yourself, do you really want to know?"
               "I'm telling you, you don't want to know." "Mu!"]))
+
+(dosync (alter command-routing conj
+               {"help" help}))
 
 (defn unknown-command [{}]
   "Reponse given when we don't have any command matching the user's request."
