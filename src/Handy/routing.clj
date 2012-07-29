@@ -45,8 +45,9 @@ PARSED-MESSAGE. The command may only say something in the channel."
               "Ask yourself, do you really want to know?"
               "I'm telling you, you don't want to know." "Mu!"]))
 
-               {"help" help}))
 (dosync (alter routes conj
+               {"help" help
+                "source" source}))
 
 (defn unknown-command [{}]
   "Reponse given when we don't have any command matching the user's request."
