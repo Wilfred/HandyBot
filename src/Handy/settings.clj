@@ -1,4 +1,5 @@
-(ns Handy.settings)
+(ns Handy.settings
+  (:use [Handy.private-settings :only [private-settings]]))
 
 ;; todo: automatically generate names when there's a name clash
 (def settings
@@ -9,4 +10,6 @@
    :real-name "Handy IRC Bot"
    :server "irc.freenode.net"
    :port 6667
-   :channel "#HandyBot"})
+   :channel "#HandyBot"
+   :ideone-user (:ideone-user private-settings)
+   :ideone-password (:ideone-password private-settings)})
