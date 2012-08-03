@@ -4,6 +4,8 @@
         [Handy.commands.help :only [help]]
         [Handy.commands.source :only [source]]
         [Handy.commands.magic8 :only [magic8]]
+        [Handy.commands.exec :only [languages]]
+        [Handy.commands.hello :only [hello]]
         [Handy.routes :only [routes]]
         [clojure.string :only [split-lines]]))
 
@@ -28,22 +30,12 @@ PARSED-MESSAGE. The command may only say something in the channel."
     (doseq [line (split-lines command-output)]
       (say-in-channel server-connection (parsed-message :channel) line))))
 
-(defmacro defcommand
-  "A command available in the IRC bot with the %foo syntax."
-  [name params doc-string body]
-  `(do
-     (defn ~name ~params ~doc-string ~body)
-     (dosync (alter routes conj
-                    {(str '~name) ~name}))))
-
-(defcommand hello [{nick :nick}]
-  "Greet the user who spoke."
-  (format "Hello %s!" nick))
-
 (dosync (alter routes conj
-               {"help" help
+               {"hello" hello
+                "help" help
                 "source" source
-                "magic8" magic8}))
+                "magic8" magic8
+                "languages" languages}))
 
 (defn unknown-command [{}]
   "Reponse given when we don't have any command matching the user's request."
