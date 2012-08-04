@@ -13,12 +13,12 @@
 
 (def patterns
   "Regular expressions that will be tried, in order, to execute a bot command."
-  (ref [[#"%hello" hello]
-        [#"%help" help]
-        [#"%source" source]
-        [#"%magic8" magic8]
-        [#"%languages" languages]
-        [#"%.+" unknown-command]
+  (ref [[#"^%hello" hello]
+        [#"^%help" help]
+        [#"^%source" source]
+        [#"^%magic8" magic8]
+        [#"^%languages" languages]
+        [#"^%.+" unknown-command]
         ]))
 
 (defn find-matching-command [message]
