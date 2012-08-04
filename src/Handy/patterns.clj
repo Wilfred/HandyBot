@@ -20,3 +20,11 @@
         [#"%languages" languages]
         [#"%.+" unknown-command]
         ]))
+
+(defn find-matching-command [message]
+  "Given a IRC message, iterate through our command patterns and find the
+first matching command, or return nil."
+  (let [matching-patterns (filter (fn [[pattern _]] (re-find pattern message)) @patterns)
+        matching-commands (map (fn [[pattern command]] command) matching-patterns)
+        command (first matching-commands)]
+    command))

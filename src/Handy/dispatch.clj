@@ -1,6 +1,6 @@
 (ns Handy.dispatch
   (:use [Handy.parsing :only [parse-bot-message]]
-        [Handy.patterns :only [patterns]]
+        [Handy.patterns :only [find-matching-command]]
         [clojure.string :only [split-lines]]))
 
 ;; todo: fix the duplication with connection.clj of send-to-server and join-channel
@@ -28,8 +28,6 @@ PARSED-MESSAGE. The command may only say something in the channel."
 (defn dispatch-command [server-connection raw-message]
   (when-let [parsed-message (parse-bot-message raw-message)]
     (let [message (:message parsed-message)
-          matching-patterns (filter (fn [[pattern _]] (re-find pattern message)) @patterns)
-          matching-commands (map (fn [[pattern command]] command) matching-patterns)
-          command (first matching-commands)]
+          command (find-matching-command message)]
       (when command
         (call-say-command server-connection command parsed-message)))))
