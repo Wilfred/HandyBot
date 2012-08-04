@@ -1,12 +1,6 @@
-(ns Handy.routing
-  "Functions that make the bot speak in a channel."
+(ns Handy.dispatch
   (:use [Handy.parsing :only [parse-bot-message]]
-        [Handy.commands.help :only [help]]
-        [Handy.commands.source :only [source]]
-        [Handy.commands.magic8 :only [magic8]]
-        [Handy.commands.exec :only [languages]]
-        [Handy.commands.hello :only [hello]]
-        [Handy.routes :only [routes]]
+        [Handy.patterns :only [patterns]]
         [clojure.string :only [split-lines]]))
 
 ;; todo: fix the duplication with connection.clj of send-to-server and join-channel
@@ -30,19 +24,12 @@ PARSED-MESSAGE. The command may only say something in the channel."
     (doseq [line (split-lines command-output)]
       (say-in-channel server-connection (parsed-message :channel) line))))
 
-(dosync (alter routes conj
-               {"hello" hello
-                "help" help
-                "source" source
-                "magic8" magic8
-                "languages" languages}))
-
-(defn unknown-command [{}]
-  "Reponse given when we don't have any command matching the user's request."
-  (str "Sorry, I don't know how to do that. I know: " (keys @routes)))
-
+;; todo: skip excessive parsing
 (defn dispatch-command [server-connection raw-message]
   (when-let [parsed-message (parse-bot-message raw-message)]
-    (let [command-name (parsed-message :command-name)
-          command (or (@routes command-name) unknown-command)]
-     (call-say-command server-connection command parsed-message))))
+    (let [message (:message parsed-message)
+          matching-patterns (filter (fn [[pattern _]] (re-find pattern message)) @patterns)
+          matching-commands (map (fn [[pattern command]] command) matching-patterns)
+          command (first matching-commands)]
+      (when command
+        (call-say-command server-connection command parsed-message)))))

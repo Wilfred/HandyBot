@@ -1,6 +1,6 @@
 (ns Handy.connection
   "Functions for connecting to an IRC server."
-  (:use [Handy.routing :only [dispatch-command]]
+  (:use [Handy.dispatch :only [dispatch-command]]
         [Handy.settings :only [settings]]))
 
 (defn open-socket [host port]
