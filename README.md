@@ -19,6 +19,11 @@ First, create a private_settings.clj in src/Handy:
 Then just run the code with Leiningent
 
     $ lein run
+    
+## Third party APIs
+
+HandyBot uses [ideone.com](http://ideone.com) by
+[Sphere Research Labs](http://sphere-research.com).
 
 ## License
 
