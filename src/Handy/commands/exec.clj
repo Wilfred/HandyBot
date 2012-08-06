@@ -18,25 +18,25 @@
 ;; TODO: exception for rpc failing
 ;; TODO: don't require callers to pass in username and password
 (defn call-ideone-rpc [method params]
-  (call-json-rpc "ideone.com" "/api/1/service.json" method params))
+  (call-json-rpc
+   "ideone.com"
+   "/api/1/service.json"
+   method
+   (into [(:ideone-user settings) (:ideone-password settings)] params)))
 
 (defn json-rpc-result [response]
   "Given a raw HTTP reponse map from a JSON-RPC server, return the result map."
   (:result (read-json (:body response))))
 
 (defn ideone-test-function []
-  (json-rpc-result (call-ideone-rpc
-                    "testFunction"
-                    [(:ideone-user settings)
-                     (:ideone-password settings)])))
+  (json-rpc-result (call-ideone-rpc "testFunction" [])))
 
 (defn ideone-get-languages []
   "Query Ideone for the languages supported, returning a map of language IDs
 to language names."
   (:languages (json-rpc-result (call-ideone-rpc
                                 "getLanguages"
-                                [(:ideone-user settings)
-                                 (:ideone-password settings)]))))
+                                []))))
 
 (defn parse-language-name [language-with-version]
   "Given a string of the form \"foo bar (1.0)\", separate the language name from
