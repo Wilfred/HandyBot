@@ -1,4 +1,4 @@
-private-settings.clj
+src/Handy/private_settings.clj
 target
 /pom.xml
 *jar
