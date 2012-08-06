@@ -7,6 +7,17 @@ code in sandbox.
 
 ## Usage
 
+First, create a private_settings.clj in src/Handy:
+
+    $ cat src/Handy/private_settings.clj                                                                                                                                                                    [23:22:18]
+    (ns Handy.private-settings)
+    
+    (def private-settings
+      {:ideone-user "your-ideone-username"
+       :ideone-password "your-ideone-password"})
+    
+Then just run the code with Leiningent
+
     $ lein run
 
 ## License
