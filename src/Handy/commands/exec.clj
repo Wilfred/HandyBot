@@ -24,9 +24,6 @@
   "Given a raw HTTP reponse map from a JSON-RPC server, return the result map."
   (:result (read-json (:body response))))
 
-(def USER "handybot")
-(def PASSWORD "590b39c05cafe")
-
 (defn ideone-test-function []
   (json-rpc-result (call-ideone-rpc
                     "testFunction"
