@@ -1,6 +1,7 @@
 (ns Handy.commands.exec
   (:require [clj-http.client :as client])
   (:use [clojure.data.json :only (read-json json-str)]
+        [clojure.string :only (blank? trim)]
         [Handy.settings :only [settings]]))
 
 (defn current-unix-time [] (.getTime (java.util.Date.)))
@@ -37,6 +38,51 @@ to language names."
   (:languages (json-rpc-result (call-ideone-rpc
                                 "getLanguages"
                                 []))))
+
+(defn ideone-execute-python [source]
+  (let [python 4
+        input ""
+        run true
+        private true]
+    (:link (json-rpc-result
+            (call-ideone-rpc
+             "createSubmission"
+             [source python input run private])))))
+
+(def PROGRAM-FINISHED-STATUS 0)
+
+(defn ideone-submission-is-finished [link]
+  (= PROGRAM-FINISHED-STATUS
+     (:status (json-rpc-result
+               (call-ideone-rpc
+                "getSubmissionStatus"
+                [link])))))
+
+(defn ideone-get-submission-output [link]
+  (let [return-source false
+        return-input false
+        return-output true
+        return-stderr true
+        return-compilation true
+        raw-result (json-rpc-result
+                    (call-ideone-rpc
+                     "getSubmissionDetails"
+                     [link return-source return-input return-output
+                      return-stderr return-compilation]))]
+    {:stdout (:output raw-result) :stderr (:stderr raw-result)
+     :compilation (:cmpinfo raw-result)}))
+
+(defn python [{source :argument}]
+  (let [link (ideone-execute-python source)
+        output (do
+                 (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
+                 (ideone-get-submission-output link))
+        stdout (:stdout output)
+        stderr (:stderr output)]
+    (str
+     (if (blank? stdout) "" (format "[stdout] %s\n" (trim stdout)))
+     (if (blank? stderr) "" (format "[stderr] %s\n" (trim stderr)))
+     (format "[link] http://ideone.com/%s" link))))
 
 (defn parse-language-name [language-with-version]
   "Given a string of the form \"foo bar (1.0)\", separate the language name from

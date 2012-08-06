@@ -2,7 +2,7 @@
   (:use [Handy.commands.help :only [help]]
         [Handy.commands.source :only [source]]
         [Handy.commands.magic8 :only [magic8]]
-        [Handy.commands.exec :only [languages]]
+        [Handy.commands.exec :only [languages python]]
         [Handy.commands.hello :only [hello]]))
 
 ;; todo: move to a separate file
@@ -18,6 +18,7 @@
         [#"^%source" source]
         [#"^%magic8" magic8]
         [#"^%languages" languages]
+        [#"^%python" python]
         [#"^%.+" unknown-command]
         ]))
 
