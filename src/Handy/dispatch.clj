@@ -17,11 +17,24 @@
 PARSED-MESSAGE. The command may send any IRC command to the server."
   (send-to-server server-connection (command parsed-message)))
 
+(defn split-str-by-length
+  "Split STRING into a list of substrings, each no longer than MAX-LENGTH."
+  [string max-length]
+  (if (<= (count string) max-length) [string]
+      (into [(subs string 0 max-length)]
+            (split-str-by-length (subs string max-length) max-length))))
+
+(defn split-irc-lines
+  "Split a newline separated string into a list of strings, line
+breaking excessively long lines."
+  [raw-text]
+  (flatten (map (fn [t] (split-str-by-length t 100)) (split-lines raw-text))))
+
 (defn call-say-command [server-connection command parsed-message]
   "Execute a bot command COMMAND that was called by
 PARSED-MESSAGE. The command may only say something in the channel."
   (let [command-output (command parsed-message)]
-    (doseq [line (split-lines command-output)]
+    (doseq [line (split-irc-lines command-output)]
       (say-in-channel server-connection (parsed-message :channel) line))))
 
 ;; todo: skip excessive parsing
