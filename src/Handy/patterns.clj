@@ -3,7 +3,8 @@
         [Handy.commands.source :only [source]]
         [Handy.commands.magic8 :only [magic8]]
         [Handy.commands.exec :only [languages python]]
-        [Handy.commands.hello :only [hello]]))
+        [Handy.commands.hello :only [hello]]
+        [Handy.commands.commands :only [commands]]))
 
 ;; todo: move to a separate file
 ;; todo: suggest similarly spellt commands
@@ -19,6 +20,7 @@
         [#"^%magic8" magic8]
         [#"^%languages" languages]
         [#"^%python" python]
+        [#"^%commands" commands]
         [#"^%.+" unknown-command]
         ]))
 
