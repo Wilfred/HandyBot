@@ -2,7 +2,7 @@
   (:use [Handy.commands.help :only [help]]
         [Handy.commands.source :only [source]]
         [Handy.commands.magic8 :only [magic8]]
-        [Handy.commands.exec :only [languages python]]
+        [Handy.commands.exec :only [languages python js]]
         [Handy.commands.hello :only [hello]]
         [Handy.commands.commands :only [commands]]))
 
@@ -20,6 +20,7 @@
         [#"^%magic8" magic8]
         [#"^%languages" languages]
         [#"^%python" python]
+        [#"^%js" js]
         [#"^%commands" commands]
         [#"^%.+" unknown-command]
         ]))

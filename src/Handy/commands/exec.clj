@@ -39,15 +39,14 @@ to language names."
                                 "getLanguages"
                                 []))))
 
-(defn ideone-execute-python [source]
-  (let [python 4
-        input ""
+(defn ideone-execute-code [language-id source]
+  (let [input ""
         run true
         private true]
     (:link (json-rpc-result
             (call-ideone-rpc
              "createSubmission"
-             [source python input run private])))))
+             [source language-id input run private])))))
 
 (def PROGRAM-FINISHED-STATUS 0)
 
@@ -73,7 +72,8 @@ to language names."
      :compilation (:cmpinfo raw-result)}))
 
 (defn python [{source :argument}]
-  (let [link (ideone-execute-python source)
+  (let [python 4
+        link (ideone-execute-code python source)
         output (do
                  (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
                  (ideone-get-submission-output link))
@@ -84,11 +84,18 @@ to language names."
      (if (blank? stderr) "" (format "[stderr] %s\n" (trim stderr)))
      (format "[link] http://ideone.com/%s" link))))
 
-(defn parse-language-name [language-with-version]
-  "Given a string of the form \"foo bar (1.0)\", separate the language name from
-the version."
-  (let [[whole-message name version] (re-find #"(.*) \((.*)\)" language-with-version)]
-    {:name name :version version}))
+(defn js [{source :argument}]
+  (let [js-spidermonkey 112
+        link (ideone-execute-code js-spidermonkey source)
+        output (do
+                 (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
+                 (ideone-get-submission-output link))
+        stdout (:stdout output)
+        stderr (:stderr output)]
+    (str
+     (if (blank? stdout) "" (format "[stdout] %s\n" (trim stdout)))
+     (if (blank? stderr) "" (format "[stderr] %s\n" (trim stderr)))
+     (format "[link] http://ideone.com/%s" link))))
 
 (defn languages [{}]
   "Return a list of all the languages supported by %exec."
