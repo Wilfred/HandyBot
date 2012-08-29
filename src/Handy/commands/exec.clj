@@ -99,6 +99,4 @@ to language names."
 
 (defn languages [{}]
   "Return a list of all the languages supported by %exec."
-  (let [languages-with-versions (sort (vals (ideone-get-languages)))
-        language-names (map :name (map parse-language-name languages-with-versions))]
-    (apply str (interpose ", " language-names))))
+  (str (ideone-get-languages)))
