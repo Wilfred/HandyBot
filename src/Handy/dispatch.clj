@@ -1,7 +1,7 @@
 (ns Handy.dispatch
   (:use [Handy.parsing :only [parse-bot-message]]
         [Handy.patterns :only [find-matching-command]]
-        [clojure.string :only [split-lines]]))
+        [clojure.string :only [split-lines triml]]))
 
 ;; todo: fix the duplication with connection.clj of send-to-server and join-channel
 (defn send-to-server [server-connection raw-message]
@@ -17,18 +17,36 @@
 PARSED-MESSAGE. The command may send any IRC command to the server."
   (send-to-server server-connection (command parsed-message)))
 
-(defn split-str-by-length
-  "Split STRING into a list of substrings, each no longer than MAX-LENGTH."
+(defn char-indexes
+  "Return a list of all the positions of CHAR in STRING."
+  [string char]
+  (let [enumerated-list (map list string (range))
+        matching-chars (filter (fn [[element _]] (= element char)) enumerated-list)
+        indexes (map (fn [[_ index]] index) matching-chars)]
+    indexes))
+
+(defn word-substring
+  "Split STRING into two components, where the first is no longer
+than LENGTH. We try to break on a word boundary."
+  [string length]
+  (let [space-positions (char-indexes string \space)
+        split-positions (filter (fn [x] (< x length)) space-positions)
+        split-position (if (empty? split-positions) length (last split-positions))]
+    (if (< (count string) length) [string ""]
+        [(subs string 0 split-position) (triml (subs string split-position))])))
+
+(defn split-words
+  "Split STRING on word boundaries, into substrings no longer than MAX-LENGTH."
   [string max-length]
-  (if (<= (count string) max-length) [string]
-      (into [(subs string 0 max-length)]
-            (split-str-by-length (subs string max-length) max-length))))
+  (let [[first-part remainder] (word-substring string max-length)]
+    (if (empty? remainder) [first-part]
+        (into [first-part] (split-words remainder max-length)))))
 
 (defn split-irc-lines
   "Split a newline separated string into a list of strings, line
 breaking excessively long lines."
   [raw-text]
-  (flatten (map (fn [t] (split-str-by-length t 100)) (split-lines raw-text))))
+  (flatten (map (fn [t] (split-words t 100)) (split-lines raw-text))))
 
 (defn call-say-command [server-connection command parsed-message]
   "Execute a bot command COMMAND that was called by
