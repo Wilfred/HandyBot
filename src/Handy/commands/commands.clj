@@ -8,7 +8,7 @@
 (defn commands
   "List all the commands according to their regular expression."
   [{}]
-  (str "I repond to IRC messages matching the following patterns: "
+  (str "I repond to IRC messages matching the following patterns: \n"
        (apply str
               (interpose " "
                          (map str
