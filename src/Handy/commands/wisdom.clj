@@ -4,7 +4,7 @@
 
 (defn wisdom [{}]
   "A random snippet of wisdom, or unusual engineering thought processes."
-  (rand-nth oblique-thinking))
+  (first (shuffle oblique-thinking)))
 
 ;; taken from http://topcat.hypermart.net/oblique.html which is GPL licensed
 (def oblique-thinking
