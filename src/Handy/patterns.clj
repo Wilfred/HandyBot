@@ -4,7 +4,8 @@
         [Handy.commands.magic8 :only [magic8]]
         [Handy.commands.exec :only [languages python js]]
         [Handy.commands.hello :only [hello]]
-        [Handy.commands.commands :only [commands]]))
+        [Handy.commands.commands :only [commands]]
+        [Handy.commands.wisdom :only [wisdom]]))
 
 ;; todo: move to a separate file
 ;; todo: suggest similarly spellt commands
@@ -22,6 +23,7 @@
         [#"^%python" python]
         [#"^%js" js]
         [#"^%commands" commands]
+        [#"^%wisdom" wisdom]
         [#"^%.+" unknown-command]
         ]))
 
