@@ -5,6 +5,7 @@
         [Handy.commands.exec :only [languages python js]]
         [Handy.commands.hello :only [hello]]
         [Handy.commands.commands :only [commands]]
+        [Handy.commands.parse :only [parse]]
         [Handy.commands.wisdom :only [wisdom]]))
 
 ;; todo: move to a separate file
@@ -23,6 +24,7 @@
         [#"^%python" python]
         [#"^%js" js]
         [#"^%commands" commands]
+        [#"^%parse" parse]
         [#"^%wisdom" wisdom]
         [#"^%.+" unknown-command]
         ]))
