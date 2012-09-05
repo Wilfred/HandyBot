@@ -1,7 +1,7 @@
 (ns Handy.commands.exec
   (:require [clj-http.client :as client])
   (:use [clojure.data.json :only (read-json json-str)]
-        [clojure.string :only (blank? trim)]
+        [clojure.string :only (blank? trim join)]
         [Handy.settings :only [settings]]))
 
 (defn current-unix-time [] (.getTime (java.util.Date.)))
@@ -99,4 +99,7 @@ to language names."
 
 (defn languages [{}]
   "Return a list of all the languages supported by %exec."
-  (str (ideone-get-languages)))
+  (let [language-map (ideone-get-languages)
+        language-ids (sort (map (comp #(Integer/parseInt %) name) (keys (ideone-get-languages))))
+        language-list (map #(str % " " (language-map (keyword (str %)))) language-ids)]
+    (join "\n" language-list)))
