@@ -1,5 +1,5 @@
 (ns Handy.patterns
-  (:use [Handy.commands.help :only [help]]
+  (:use [Handy.commands.help :only [help about]]
         [Handy.commands.source :only [source]]
         [Handy.commands.magic8 :only [magic8]]
         [Handy.commands.exec :only [languages python js]]
@@ -18,6 +18,7 @@
   "Regular expressions that will be tried, in order, to execute a bot command."
   (ref [[#"^%hello" hello]
         [#"^%help" help]
+        [#"^%about" about]
         [#"^%source" source]
         [#"^%magic8" magic8]
         [#"^%languages" languages]
