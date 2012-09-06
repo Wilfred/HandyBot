@@ -23,7 +23,8 @@ Then just run the code with Leiningent
 ## Third party APIs
 
 HandyBot uses [ideone.com](http://ideone.com) by
-[Sphere Research Labs](http://sphere-research.com).
+[Sphere Research Labs](http://sphere-research.com) for sandboxed code
+execution. It also uses the Last.fm API for music recommendations.
 
 ## License
 

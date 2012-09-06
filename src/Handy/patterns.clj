@@ -6,7 +6,8 @@
         [Handy.commands.hello :only [hello]]
         [Handy.commands.commands :only [commands]]
         [Handy.commands.parse :only [parse]]
-        [Handy.commands.wisdom :only [wisdom]]))
+        [Handy.commands.wisdom :only [wisdom]]
+        [Handy.commands.music :only [music]]))
 
 ;; todo: move to a separate file
 ;; todo: suggest similarly spellt commands
@@ -27,6 +28,7 @@
         [#"^%commands" commands]
         [#"^%parse" parse]
         [#"^%wisdom" wisdom]
+        [#"^%music" music]
         [#"^%.+" unknown-command]
         ]))
 
