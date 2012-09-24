@@ -42,11 +42,12 @@ than LENGTH. We try to break on a word boundary."
     (if (empty? remainder) [first-part]
         (into [first-part] (split-words remainder max-length)))))
 
+(def MAX-LINE-LENGTH 160)
 (defn split-irc-lines
   "Split a newline separated string into a list of strings, line
 breaking excessively long lines."
   [raw-text]
-  (flatten (map (fn [t] (split-words t 100)) (split-lines raw-text))))
+  (flatten (map (fn [t] (split-words t MAX-LINE-LENGTH)) (split-lines raw-text))))
 
 (defn call-say-command [server-connection command parsed-message]
   "Execute a bot command COMMAND that was called by
