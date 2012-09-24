@@ -1,6 +1,5 @@
 (ns Handy.patterns
-  (:use [Handy.commands.help :only [help about]]
-        [Handy.commands.source :only [source]]
+  (:use [Handy.commands.help :only [help about source]]
         [Handy.commands.magic8 :only [magic8]]
         [Handy.commands.exec :only [languages python js]]
         [Handy.commands.hello :only [hello]]
