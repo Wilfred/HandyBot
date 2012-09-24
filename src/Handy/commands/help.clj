@@ -16,7 +16,10 @@
 (defn help
   "Gives help on all commands from their docstrings."
   [{command-name :argument}]
-  "Hi, I'm a bot. Try %about or %help <command> (to be implemented).")
+  (let [command (find-matching-command command-name)]
+    (if command
+      "Sorry, I can't give help on specific commands yet."
+      "Hi, I'm a bot. Try %about or %help <command> (to be implemented).")))
 
 ;; todo: get description from project.clj
 (defn about
@@ -25,6 +28,3 @@
   (let [version (System/getProperty "Handy.version")]
     (format "This is HandyBot %s, the self-documenting IRC bot. Source lives at https://github.com/Wilfred/HandyBot."
             version)))
-
-
-
