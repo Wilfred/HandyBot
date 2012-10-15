@@ -12,4 +12,5 @@
    :port 6667
    :channel "#HandyBot"
    :ideone-user (:ideone-user private-settings)
-   :ideone-password (:ideone-password private-settings)})
+   :ideone-password (:ideone-password private-settings)
+   :lastfm-api-key (:lastfm-api-key private-settings)})

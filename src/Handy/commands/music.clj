@@ -1,10 +1,8 @@
 (ns Handy.commands.music
   (:import (java.io ByteArrayInputStream))
   (:require [clj-http.client :as client])
-  (:use [clojure.data.json :only (read-json)]))
-
-;; todo: actual api key, not just copy-paste from the docs sample code
-(def api-key "b25b959554ed76058ac220b7b2e0a026")
+  (:use [clojure.data.json :only (read-json)]
+        [Handy.settings :only [settings]]))
 
 (defn last-fm-similar-artists [artist-name]
   (let [json-response
@@ -12,7 +10,7 @@
                            {:throw-exceptions false
                             :query-params {"method" "artist.getsimilar"
                                            "artist" artist-name
-                                           "api_key" api-key
+                                           "api_key" (:lastfm-api-key settings)
                                            "format" "json"}}))
         parsed-response (read-json json-response)
         artists (:artist (:similarartists parsed-response))
