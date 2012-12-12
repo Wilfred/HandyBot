@@ -1,6 +1,7 @@
-# Handy
+# HandyBot
 
-A simple IRC bot in Clojure.
+A simple IRC bot in Clojure. HandyBot is inspired by Emacs, so aims to
+by maximally self-documenting and introspectable.
 
 Target features: remembers aliases, gets weather, tube status, execute
 code in sandbox.
