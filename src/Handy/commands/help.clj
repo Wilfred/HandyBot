@@ -19,7 +19,7 @@
   (let [command (find-matching-command command-name)]
     (if command
       "Sorry, I can't give help on specific commands yet."
-      "Hi, I'm a bot. Try %about or %help <command> (to be implemented).")))
+      "Hi, I'm a bot. Try %about, %commands or %help <command> (to be implemented).")))
 
 ;; todo: get description from project.clj
 (defn about
