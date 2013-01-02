@@ -5,4 +5,5 @@
                  [org.clojure/data.json "0.1.2"]
                  [clj-time "0.4.4"]
                  [org.ocpsoft.prettytime/prettytime "1.0.8.Final"]]
-  :main Handy.core)
+  :main Handy.core
+  :jvm-opts ["-Xms32m"  "-Xmx64m"])
