@@ -7,6 +7,7 @@
         [Handy.commands.parse :only [parse]]
         [Handy.commands.wisdom :only [wisdom]]
         [Handy.commands.timestamp :only [timestamp]]
+        [Handy.commands.fashion :only [suggest]]
         [Handy.commands.music :only [music]]))
 
 ;; todo: move to a separate file
@@ -30,6 +31,7 @@
         [#"^%wisdom" wisdom]
         [#"^%music" music]
         [#"^%time" timestamp]
+        [#"^%fashion" suggest]
         [#"^%.+" unknown-command]
         ]))
 
