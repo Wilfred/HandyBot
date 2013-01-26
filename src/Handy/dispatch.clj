@@ -1,6 +1,6 @@
 (ns Handy.dispatch
   (:use [Handy.parsing :only [parse-bot-message]]
-        [Handy.patterns :only [find-matching-command]]
+        [Handy.routing :only [find-matching-command]]
         [clojure.string :only [split-lines triml]]))
 
 ;; todo: fix the duplication with connection.clj of send-to-server and join-channel

@@ -1,15 +1,15 @@
 (ns Handy.commands.commands)
 
-(defn get-patterns
+(defn get-routing
   "We manually resolve rather than using (use ...) to avoid circular imports"
   []
-  (var-get (ns-resolve 'Handy.patterns 'patterns)))
+  (var-get (ns-resolve 'Handy.routing 'routing)))
 
 (defn commands
-  "List all the commands according to their regular expression."
+  "List all the commands available."
   [{}]
-  (str "I repond to IRC messages matching the following patterns: \n"
+  (str "I respond to IRC messages that start with: \n"
        (apply str
               (interpose " "
-                         (map str
-                              (map first @(get-patterns)))))))
+                         (sort
+                          (map (fn [[pattern command]] pattern) (get-routing)))))))

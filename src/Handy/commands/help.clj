@@ -4,7 +4,7 @@
 
 (defn find-matching-command [message]
   "We manually resolve rather than using (use ...) to avoid circular imports"
-  ((ns-resolve 'Handy.patterns 'find-matching-command) message))
+  ((ns-resolve 'Handy.routing 'find-matching-command) message))
 
 (defn source [{command-name :argument}]
   "Return the source code for a command."
