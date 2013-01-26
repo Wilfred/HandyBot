@@ -1,5 +1,11 @@
-(ns Handy.settings
-  (:use [Handy.private-settings :only [private-settings]]))
+(ns Handy.settings)
+
+(try
+  (use 'Handy.private-settings)
+  (catch java.io.FileNotFoundException e
+    (do
+      (def private-settings {})
+      (prn "Warning: No private settings found!"))))
 
 ;; todo: automatically generate names when there's a name clash
 (def settings
