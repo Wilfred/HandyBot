@@ -2,9 +2,9 @@
   (:use [clojure.string :only [split-lines lower-case]]))
 
 
-(def colours (map lower-case (split-lines (slurp "colours.txt"))))
+(def colours (map lower-case (split-lines (slurp "resources/colours.txt"))))
 
-(def clothing (split-lines (slurp "clothing.txt")))
+(def clothing (split-lines (slurp "resources/clothing.txt")))
 
 (def intros ["I think you'd look great in"
              "You know what would work for you? I suggest"
