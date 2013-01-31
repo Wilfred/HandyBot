@@ -59,7 +59,6 @@ PARSED-MESSAGE. The command may only say something in the channel."
 ;; todo: skip excessive parsing
 (defn dispatch-command [server-connection raw-message]
   (when-let [parsed-message (parse-bot-message raw-message)]
-    (let [message (:message parsed-message)
-          command (find-matching-command message)]
+    (let [command (find-matching-command (:command-name parsed-message))]
       (when command
         (call-say-command server-connection command parsed-message)))))
