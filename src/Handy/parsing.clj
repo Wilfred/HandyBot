@@ -18,7 +18,7 @@ information. Returns nil if this raw messsage doesn't look like a bot
 command."
   [raw-message]
   (let [parsed-irc-message (parse-irc-message raw-message)]
-    (when-let [match (re-find #"(%[^ ]+)(.*)" (parsed-irc-message :message))]
+    (when-let [match (re-find #"^(%[^ ]+)(.*)" (parsed-irc-message :message))]
       (let [[_ command-name argument] match]
         (conj parsed-irc-message
               {:command-name command-name :argument (trim argument)})))))
