@@ -3,6 +3,7 @@
         [Handy.commands.magic8 :only [magic8]]
         [Handy.commands.exec :only [languages python js]]
         [Handy.commands.hello :only [hello]]
+        [Handy.commands.more :only [more]]
         [Handy.commands.commands :only [commands]]
         [Handy.commands.parse :only [parse]]
         [Handy.commands.wisdom :only [wisdom]]
@@ -24,6 +25,7 @@
 
 (def routing
   {"%hello" hello
+   "%more" more
    "%help" help
    "%about" about
    "%source" source

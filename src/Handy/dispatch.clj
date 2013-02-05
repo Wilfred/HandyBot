@@ -1,7 +1,8 @@
 (ns Handy.dispatch
   (:use [Handy.parsing :only [parse-bot-message]]
         [Handy.routing :only [find-matching-command]]
-        [clojure.string :only [split-lines triml]]))
+        [Handy.commands.more :only [more set-command-output get-more-output remaining-output]]
+        [clojure.string :only [split-lines triml blank?]]))
 
 ;; todo: fix the duplication with connection.clj of send-to-server and join-channel
 (defn send-to-server [server-connection raw-message]
@@ -53,8 +54,12 @@ breaking excessively long lines."
   "Execute a bot command COMMAND that was called by
 PARSED-MESSAGE. The command may only say something in the channel."
   (let [command-output (command parsed-message)]
-    (doseq [line (split-irc-lines command-output)]
-      (say-in-channel server-connection (parsed-message :channel) line))))
+    (set-command-output command-output)
+    
+    (doseq [line (split-irc-lines (get-more-output))]
+      (say-in-channel server-connection (parsed-message :channel) line))
+    (if (not (zero? (count @remaining-output)))
+      (say-in-channel server-connection (parsed-message :channel) "(type %more for more output)"))))
 
 ;; todo: skip excessive parsing
 (defn dispatch-command [server-connection raw-message]
