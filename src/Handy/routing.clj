@@ -2,6 +2,7 @@
   (:use [Handy.commands.help :only [help about source]]
         [Handy.commands.magic8 :only [magic8]]
         [Handy.commands.exec :only [languages python js]]
+        [Handy.commands.twitter :only [devops]]
         [Handy.commands.hello :only [hello]]
         [Handy.commands.more :only [more]]
         [Handy.commands.commands :only [commands]]
@@ -33,6 +34,7 @@
    "%languages" languages
    "%python" python
    "%js" js
+   "%devops" devops
    "%commands" commands
    "%parse" parse
    "%wisdom" wisdom
