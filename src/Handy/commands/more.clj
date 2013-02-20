@@ -17,7 +17,7 @@
 (defn set-command-output
   "Save the output of this command so we can access it incrementally"
   [output]
-  (dosync (ref-set remaining-output output)))
+  (dosync (ref-set remaining-output (or output ""))))
 
 (defn more
   "If the last command returned too much output, return the next bit of output."
