@@ -90,6 +90,19 @@ language numbers to language names."
      (if (blank? stderr) "" (format "[stderr] %s\n" (trim stderr)))
      (format "[link] http://ideone.com/%s" link))))
 
+(defn python3 [{source :argument}]
+  (let [python3 116
+        link (ideone-execute-code python3 source)
+        output (do
+                 (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
+                 (ideone-get-submission-output link))
+        stdout (:stdout output)
+        stderr (:stderr output)]
+    (str
+     (if (blank? stdout) "" (format "[stdout] %s\n" (trim stdout)))
+     (if (blank? stderr) "" (format "[stderr] %s\n" (trim stderr)))
+     (format "[link] http://ideone.com/%s" link))))
+
 (defn js
   "Run the JavaScript under node.js in IDEOne's sandbox."
   [{source :argument}]

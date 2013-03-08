@@ -1,7 +1,7 @@
 (ns Handy.routing
   (:use [Handy.commands.help :only [help about source]]
         [Handy.commands.magic8 :only [magic8]]
-        [Handy.commands.exec :only [languages python js]]
+        [Handy.commands.exec :only [languages python python3 js]]
         [Handy.commands.twitter :only [devops]]
         [Handy.commands.hello :only [hello]]
         [Handy.commands.more :only [more]]
@@ -33,6 +33,7 @@
    "%magic8" magic8
    "%languages" languages
    "%python" python
+   "%python3" python3
    "%js" js
    "%devops" devops
    "%commands" commands
