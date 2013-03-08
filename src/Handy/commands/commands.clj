@@ -8,8 +8,7 @@
 (defn commands
   "List all the commands available."
   [{}]
-  (str "I respond to IRC messages that start with: \n"
-       (apply str
-              (interpose " "
-                         (sort
-                          (map (fn [[pattern command]] pattern) (get-routing)))))))
+  (let [patterns (map (fn [[pattern command]] pattern) (get-routing))]
+    (str "I respond to IRC messages that start with: \n"
+         (apply str
+                (interpose " " (sort patterns))))))
