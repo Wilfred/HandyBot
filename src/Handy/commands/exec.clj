@@ -32,12 +32,18 @@
 (defn ideone-test-function []
   (json-rpc-result (call-ideone-rpc "testFunction" [])))
 
-(defn ideone-get-languages []
-  "Query Ideone for the languages supported, returning a map of language IDs
-to language names."
-  (:languages (json-rpc-result (call-ideone-rpc
-                                "getLanguages"
-                                []))))
+(defn ideone-get-languages
+  "Query Ideone for the languages supported, returning a map of
+language numbers to language names."
+  []
+  (let [raw-result (json-rpc-result (call-ideone-rpc "getLanguages" []))
+        ;; map of form {:104 "AWK (gawk) (gawk-3.1.6)", ...}
+        raw-languages (:languages raw-result)
+        ;; converts :104 to 104
+        symbol-to-int (comp #(Integer/parseInt %) name)
+        language-pairs (map (fn [[symbol lang-name]] [(symbol-to-int symbol) lang-name])
+                            raw-languages)]
+    (apply hash-map (flatten language-pairs))))
 
 (defn ideone-execute-code [language-id source]
   (let [input ""
@@ -102,6 +108,5 @@ to language names."
 (defn languages [{}]
   "Return a list of all the languages supported by %exec."
   (let [language-map (ideone-get-languages)
-        language-ids (sort (map (comp #(Integer/parseInt %) name) (keys language-map)))
-        language-list (map #(str % " " (language-map (keyword (str %)))) language-ids)]
+        language-list (map (fn [[id name]] (format "%s %s" id name)) (sort language-map))]
     (join "\n" language-list)))
