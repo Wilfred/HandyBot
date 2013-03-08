@@ -102,6 +102,6 @@ to language names."
 (defn languages [{}]
   "Return a list of all the languages supported by %exec."
   (let [language-map (ideone-get-languages)
-        language-ids (sort (map (comp #(Integer/parseInt %) name) (keys (ideone-get-languages))))
+        language-ids (sort (map (comp #(Integer/parseInt %) name) (keys language-map)))
         language-list (map #(str % " " (language-map (keyword (str %)))) language-ids)]
     (join "\n" language-list)))
