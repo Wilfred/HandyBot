@@ -54,4 +54,12 @@
 unknown-command, or return nil." ; TODO: cleaner separation of unknown-command
   [command-name]
   (when (bot-command? command-name)
-    (or (@routes command-name) unknown-command)))
+    (let [matching-command (@routes command-name)]
+      (cond
+       ;; treat strings in the routes as functions that return the string
+       (= (type matching-command) java.lang.String)
+       ;; all HandyBot commands need to take a map
+       (fn [{}] matching-command)
+       (= matching-command nil)
+       unknown-command
+       :else matching-command))))
