@@ -10,6 +10,7 @@
         [Handy.commands.wisdom :only [wisdom]]
         [Handy.commands.timestamp :only [timestamp]]
         [Handy.commands.fashion :only [suggest]]
+        [Handy.commands.learn :only [learn]]
         [Handy.commands.music :only [music]]))
 
 ;; todo: move to a separate file
@@ -42,7 +43,8 @@
     "%wisdom" wisdom
     "%music" music
     "%time" timestamp
-    "%fashion" suggest}))
+    "%fashion" suggest
+    "%learn" learn}))
 
 (defn bot-command?
   "Is this a message to HandyBot?"
@@ -56,10 +58,10 @@ unknown-command, or return nil." ; TODO: cleaner separation of unknown-command
   (when (bot-command? command-name)
     (let [matching-command (@routes command-name)]
       (cond
+       (= matching-command nil)
+       unknown-command
        ;; treat strings in the routes as functions that return the string
        (= (type matching-command) java.lang.String)
        ;; all HandyBot commands need to take a map
        (fn [{}] matching-command)
-       (= matching-command nil)
-       unknown-command
        :else matching-command))))
