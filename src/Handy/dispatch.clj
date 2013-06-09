@@ -50,9 +50,10 @@ breaking excessively long lines."
   [raw-text]
   (flatten (map (fn [t] (split-words t MAX-LINE-LENGTH)) (split-lines raw-text))))
 
-(defn call-say-command [server-connection command parsed-message]
+(defn call-say-command
   "Execute a bot command COMMAND that was called by
 PARSED-MESSAGE. The command may only say something in the channel."
+  [server-connection command parsed-message]
   (let [command-output (command parsed-message)]
     (set-command-output command-output)
     
