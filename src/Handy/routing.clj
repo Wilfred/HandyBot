@@ -44,9 +44,14 @@
     "%time" timestamp
     "%fashion" suggest}))
 
+(defn bot-command?
+  "Is this a message to HandyBot?"
+  [command-name]
+  (startswith? command-name "%"))
+
 (defn find-matching-command
   "Given a command name, find the first matching command,
 unknown-command, or return nil." ; TODO: cleaner separation of unknown-command
   [command-name]
-  (or (@routes command-name)
-      (if (startswith? command-name "%") unknown-command)))
+  (when (bot-command? command-name)
+    (or (@routes command-name) unknown-command)))
