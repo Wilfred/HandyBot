@@ -24,28 +24,29 @@
   [s prefix]
   (.startsWith s prefix))
 
-(def routing
-  {"%hello" hello
-   "%more" more
-   "%help" help
-   "%about" about
-   "%source" source
-   "%magic8" magic8
-   "%languages" languages
-   "%python" python
-   "%python3" python3
-   "%js" js
-   "%devops" devops
-   "%commands" commands
-   "%parse" parse
-   "%wisdom" wisdom
-   "%music" music
-   "%time" timestamp
-   "%fashion" suggest})
+(def routes
+  (ref
+   {"%hello" hello
+    "%more" more
+    "%help" help
+    "%about" about
+    "%source" source
+    "%magic8" magic8
+    "%languages" languages
+    "%python" python
+    "%python3" python3
+    "%js" js
+    "%devops" devops
+    "%commands" commands
+    "%parse" parse
+    "%wisdom" wisdom
+    "%music" music
+    "%time" timestamp
+    "%fashion" suggest}))
 
 (defn find-matching-command
   "Given a command name, find the first matching command,
 unknown-command, or return nil." ; TODO: cleaner separation of unknown-command
   [command-name]
-  (or (routing command-name)
+  (or (@routes command-name)
       (if (startswith? command-name "%") unknown-command)))
