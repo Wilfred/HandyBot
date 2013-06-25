@@ -4,4 +4,5 @@
   "Randomly choose a yes-no-maybe response."
   (rand-nth ["Yes." "No." "Definitely." "Of course not!" "Highly likely."
               "Ask yourself, do you really want to know?"
-              "I'm telling you, you don't want to know." "Mu!"]))
+              "I'm telling you, you don't want to know."
+              "That's just a silly question."]))
