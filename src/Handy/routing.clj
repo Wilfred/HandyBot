@@ -23,7 +23,8 @@
 (defn startswith?
   "Return true if the first characters of S are PREFIX."  
   [s prefix]
-  (.startsWith s prefix))
+  (and s
+       (.startsWith s prefix)))
 
 (def routes
   (ref
