@@ -60,7 +60,7 @@ unknown-command, or return nil." ; TODO: cleaner separation of unknown-command
        (= matching-command nil)
        unknown-command
        ;; treat strings in the routes as functions that return the string
-       (= (type matching-command) java.lang.String)
+       (= (type matching-command) String)
        ;; all HandyBot commands need to take a map
        (fn [{}] matching-command)
        :else matching-command))))
