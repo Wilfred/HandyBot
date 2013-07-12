@@ -11,7 +11,8 @@
         [Handy.commands.timestamp :only [timestamp]]
         [Handy.commands.fashion :only [suggest]]
         [Handy.commands.learn :only [learn]]
-        [Handy.commands.music :only [music]]))
+        [Handy.commands.music :only [music]]
+        [Handy.string :only [startswith?]]))
 
 ;; todo: move to a separate file
 ;; todo: suggest similarly spellt commands
@@ -19,12 +20,6 @@
   "Reponse given when we don't have any command matching the user's request."
   [{}]
   "Sorry, I don't know how to do that. Try %commands.")
-
-(defn startswith?
-  "Return true if the first characters of S are PREFIX."  
-  [s prefix]
-  (and s
-       (.startsWith s prefix)))
 
 (def routes
   (ref

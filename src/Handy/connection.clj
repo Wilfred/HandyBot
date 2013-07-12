@@ -1,7 +1,8 @@
 (ns Handy.connection
   "Functions for connecting to an IRC server."
   (:use [Handy.dispatch :only [dispatch-command]]
-        [Handy.settings :only [settings]]))
+        [Handy.settings :only [settings]]
+        [Handy.string :only [startswith?]]))
 
 (defn open-socket [host port]
   (let [socket (java.net.Socket. host port)
@@ -54,7 +55,7 @@
           (println message))
         (cond
          ;; FIXME: PINGs aren't channel specific
-         (.startsWith message "PING")
+         (startswith? message "PING")
          (send-to-server server-connection (answer-ping message))
          ;; todo: handle direct messages too
          (channel-message? message)

@@ -1,15 +1,11 @@
 (ns Handy.commands.learn
-  (:use [clojure.string :only [split join]]))
+  (:use [clojure.string :only [split join]]
+        [Handy.string :only [startswith?]]))
 
 (defn get-routes
   "We manually resolve rather than using (use ...) to avoid circular imports"
   []
   (var-get (ns-resolve 'Handy.routing 'routes)))
-
-(defn startswith?
-  "Return true if the first characters of S are PREFIX."  
-  [s prefix]
-  (.startsWith s prefix))
 
 (defn learn
   "Add a new command to the routes, which just returns the string specified."
