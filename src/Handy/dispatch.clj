@@ -1,5 +1,5 @@
 (ns Handy.dispatch
-  (:use [Handy.parsing :only [parse-bot-message]]
+  (:use [Handy.parsing :only [parse-irc-message]]
         [Handy.routing :only [find-matching-command]]
         [Handy.commands.more :only [more set-command-output get-more-output remaining-output]]
         [clojure.string :only [split-lines triml blank?]]))
@@ -62,9 +62,8 @@ PARSED-MESSAGE. The command may only say something in the channel."
     (if (not (zero? (count @remaining-output)))
       (say-in-channel server-connection (parsed-message :channel) "(type %more for more output)"))))
 
-;; todo: skip excessive parsing
 (defn dispatch-command [server-connection raw-message]
-  (when-let [parsed-message (parse-bot-message raw-message)]
+  (when-let [parsed-message (parse-irc-message raw-message)]
     (let [command (find-matching-command (:command-name parsed-message))]
       (when command
         (call-say-command server-connection command parsed-message)))))
