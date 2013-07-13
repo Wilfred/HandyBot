@@ -1,6 +1,7 @@
 (ns Handy.commands.learn
   (:use [clojure.string :only [split join]]
-        [Handy.string :only [startswith?]]))
+        [Handy.string :only [startswith?]]
+        [Handy.persist-commands :only [save-custom-commands]]))
 
 (defn get-routes
   "We manually resolve rather than using (use ...) to avoid circular imports"
@@ -22,4 +23,5 @@
      :else
      (do
        (dosync (alter routes assoc name response))
+       (save-custom-commands)
        "Duly noted."))))

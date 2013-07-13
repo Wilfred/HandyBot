@@ -2,7 +2,8 @@
   "Functions for connecting to an IRC server."
   (:use [Handy.dispatch :only [dispatch-command]]
         [Handy.settings :only [settings]]
-        [Handy.string :only [startswith?]]))
+        [Handy.string :only [startswith?]]
+        [Handy.persist-commands :only [load-custom-commands]]))
 
 (defn open-socket [host port]
   (let [socket (java.net.Socket. host port)
@@ -46,8 +47,9 @@
 ;; todo: proper logging
 (defn server-event-loop [server-connection channel]
   "Join CHANNEL, and respond to the users there."
-  ;; todo: this shouldn't be part of the event loop
+  ;; todo: factor out a startup function
   (join-channel server-connection channel)
+  (load-custom-commands)
   (while true
     (let [message (.readLine (:from-server server-connection))]
       (do
