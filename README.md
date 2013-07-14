@@ -16,6 +16,17 @@ First, create a private_settings.clj in src/Handy:
     (def private-settings
       {:ideone-user "your-ideone-username"
        :ideone-password "your-ideone-password"})
+
+Handybot also uses a sandbox to evaluate code using clojail. You'll
+need to set up a basic permissions file in `~/.java.policy`:
+
+    grant {
+      permission java.security.AllPermission;
+    };
+
+Since this is very open, you'll want to run HandyBot as its own user,
+or this configuration may make Java applets run with very very open
+permissions.
     
 Then just run the code with Leiningen
 
