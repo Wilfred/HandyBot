@@ -19,4 +19,8 @@
    :channel "#HandyBot"
    :ideone-user (:ideone-user private-settings)
    :ideone-password (:ideone-password private-settings)
-   :lastfm-api-key (:lastfm-api-key private-settings)})
+   :lastfm-api-key (:lastfm-api-key private-settings)
+   :twitter-app-key (:twitter-app-key private-settings)
+   :twitter-app-secret (:twitter-app-secret private-settings)
+   :twitter-user-token (:twitter-user-token private-settings)
+   :twitter-user-token-secret (:twitter-user-token-secret private-settings)})

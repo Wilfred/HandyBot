@@ -5,6 +5,6 @@
                  [org.clojure/data.json "0.1.2"]
                  [clj-time "0.4.4"]
                  [org.ocpsoft.prettytime/prettytime "1.0.8.Final"]
-                 [clojure-twitter "1.2.6-SNAPSHOT"]]
+                 [twitter-api "0.7.4"]]
   :main Handy.core
   :jvm-opts ["-Xms32m"  "-Xmx64m"])
