@@ -17,7 +17,7 @@ First, create a private_settings.clj in src/Handy:
       {:ideone-user "your-ideone-username"
        :ideone-password "your-ideone-password"})
     
-Then just run the code with Leiningent
+Then just run the code with Leiningen
 
     $ lein run
     
