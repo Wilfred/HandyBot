@@ -29,6 +29,9 @@
   "Restore all user-defined commands from a file."
   []
   (let [routes (get-routing)
-        custom-commands
-        (deserialize (slurp "custom_commands.clj"))]
+        custom-commands-src
+        (try
+          (slurp "custom_commands.clj")
+          (catch java.io.FileNotFoundException e "{}"))
+        custom-commands (deserialize custom-commands-src)]
     (dosync (ref-set routes (merge custom-commands @routes)))))
