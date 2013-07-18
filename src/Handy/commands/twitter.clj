@@ -20,10 +20,17 @@
          :params {:screen-name username
                   :count 20}))))
 
+;; FIXME: there's a lot of duplication here
 (defn devops [{}]
   (try
-    (let [tweets (get-tweets "DEVOPS_BORAT")
-          tweet (first (shuffle tweets))]
-      tweet)
+    (let [tweets (get-tweets "DEVOPS_BORAT")]
+      (first (shuffle tweets)))
+    ;; ideally, we'd catch a twitter exception, but the library doesn't define its own exception
+    (catch Exception e (format "Twitter said '%s', sorry." e))))
+
+(defn mongo [{}]
+  (try
+    (let [tweets (get-tweets "mongodbfacts")]
+      (first (shuffle tweets)))
     ;; ideally, we'd catch a twitter exception, but the library doesn't define its own exception
     (catch Exception e (format "Twitter said '%s', sorry." e))))
