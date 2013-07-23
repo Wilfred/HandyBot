@@ -49,7 +49,7 @@
   [command-name]
   (or
    (startswith? command-name "%")
-   (startswith? command-name "HandyBot")))
+   (startswith? command-name "HandyBot:")))
 
 (defn find-matching-command
   "Given a command name, find the first matching command,
