@@ -43,3 +43,11 @@ execution. It also uses the Last.fm API for music recommendations.
 Copyright (C) 2012 Wilfred Hughes
 
 Distributed under the GNU Public License v2 or later.
+
+## Todo
+
+* Add full sandbox execution using clojail, and allow users to define custom commands
+* Fix the timestamp plugin which gets
+* %seen to see when someone last logged in
+* %reminder to set timers to remind users of things
+* Respond to direct messages
