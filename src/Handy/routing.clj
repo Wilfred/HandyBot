@@ -12,6 +12,9 @@
         [Handy.commands.fashion :only [suggest]]
         [Handy.commands.learn :only [learn]]
         [Handy.commands.music :only [music]]
+        [Handy.commands.botsnack :only [botsnack]]
+        [Handy.commands.botslap :only [botslap]]
+        [Handy.commands.music :only [music]]
         [Handy.string :only [startswith?]]))
 
 ;; todo: move to a separate file
@@ -27,6 +30,8 @@
     "%more" more
     "%help" help
     "%about" about
+    "%botsnack" botsnack
+    "%botslap" botslap
     "%source" source
     "%magic8" magic8
     "HandyBot:" magic8
