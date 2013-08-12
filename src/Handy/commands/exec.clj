@@ -45,14 +45,19 @@ language numbers to language names."
                             raw-languages)]
     (apply hash-map (flatten language-pairs))))
 
-(defn ideone-execute-code [language-id source]
+(defn ideone-execute-code 
+  "Run code SOURCE in language LANGUAGE-ID on Ideone. Synchronous."
+  [language-id source]
   (let [input ""
         run true
-        private true]
-    (:link (json-rpc-result
-            (call-ideone-rpc
-             "createSubmission"
-             [source language-id input run private])))))
+        private true
+        link (:link (json-rpc-result
+                     (call-ideone-rpc
+                      "createSubmission"
+                      [source language-id input run private])))]
+    (while (not (ideone-submission-is-finished link))
+      (Thread/sleep 1000))
+    link))
 
 (def PROGRAM-FINISHED-STATUS 0)
 
@@ -80,9 +85,7 @@ language numbers to language names."
 (defn python [{source :argument}]
   (let [python 4
         link (ideone-execute-code python source)
-        output (do
-                 (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
-                 (ideone-get-submission-output link))
+        output (ideone-get-submission-output link)
         stdout (:stdout output)
         stderr (:stderr output)]
     (str
@@ -93,9 +96,7 @@ language numbers to language names."
 (defn python3 [{source :argument}]
   (let [python3 116
         link (ideone-execute-code python3 source)
-        output (do
-                 (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
-                 (ideone-get-submission-output link))
+        output (ideone-get-submission-output link)
         stdout (:stdout output)
         stderr (:stderr output)]
     (str
@@ -108,9 +109,7 @@ language numbers to language names."
   [{source :argument}]
   (let [js-node 56
         link (ideone-execute-code js-node source)
-        output (do
-                 (Thread/sleep 2000) ; fixme -- should poll ideone-submission-is-finished
-                 (ideone-get-submission-output link))
+        output (ideone-get-submission-output link)
         stdout (:stdout output)
         stderr (:stderr output)]
     (str
