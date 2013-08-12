@@ -45,6 +45,13 @@ language numbers to language names."
                             raw-languages)]
     (apply hash-map (flatten language-pairs))))
 
+(defn ideone-submission-is-finished [link]
+  (= PROGRAM-FINISHED-STATUS
+     (:status (json-rpc-result
+               (call-ideone-rpc
+                "getSubmissionStatus"
+                [link])))))
+
 (defn ideone-execute-code 
   "Run code SOURCE in language LANGUAGE-ID on Ideone. Synchronous."
   [language-id source]
@@ -60,13 +67,6 @@ language numbers to language names."
     link))
 
 (def PROGRAM-FINISHED-STATUS 0)
-
-(defn ideone-submission-is-finished [link]
-  (= PROGRAM-FINISHED-STATUS
-     (:status (json-rpc-result
-               (call-ideone-rpc
-                "getSubmissionStatus"
-                [link])))))
 
 (defn ideone-get-submission-output [link]
   (let [return-source false
